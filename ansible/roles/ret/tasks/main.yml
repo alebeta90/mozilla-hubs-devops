@@ -1,10 +1,6 @@
 ---
 
 - block:
-  - name: Include environment specific vars
-    include_vars:
-      file: "roles/ret/vars/{{ env }}.yml"
-
   - name: Install moz hab-butterfly (needed until https://github.com/habitat-sh/habitat/issues/5257 is closed, still seems broken if calling -r ipv4:9631)
     shell: "hab pkg install mozillareality/hab-butterfly"
 
