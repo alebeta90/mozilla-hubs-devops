@@ -4,7 +4,6 @@ ret_db_password:
 erlang_node_cookie:
 phoenix_secret_key:
 phoenix_admin_access_key:
-guardian_secret_key:
 oauth_google_client_id:
 oauth_google_client_secret:
 basic_auth_username:
