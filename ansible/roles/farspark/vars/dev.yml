@@ -1,5 +1,5 @@
-farspark_signature_key: asdas23235dsdgfet35tgbunh 
-farspark_signature_salt: "@#$HASFHH"
-farspark_allow_origins: gonkar-hubs-test01.gonkar.internal
-farspark_server_url: farspark.gonkar-hubs-test01.gonkar.internal
-dd_api_key: asdasdasdu3n5i6ng54i6ubh5
+farspark_server_url: "https://farspark.reticulum.io/"
+farspark_signature_key:
+farspark_signature_salt:
+farspark_allow_origins: "https://hubs.mozilla.com,https://smoke-hubs.mozilla.com,http://hubs.local:9090,http://localhost:9090,https://hubs.local:9090,https://localhost:9090"
+dd_api_key:
