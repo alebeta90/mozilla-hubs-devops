@@ -42,11 +42,11 @@
 
   - name: "Generate local cert"
     shell: "openssl req -newkey rsa:2048 -nodes -keyout \"{{ work_dir.path }}/{{ item }}.key\" -x509 -days 365 -out \"{{ work_dir.path }}/{{ item }}.pem\" -subj '/C=US/ST=California/L=Mountain View/O=YourOrg/OU=YourDept/CN=yoursite.com'"
-    when: env == 'local'
+    when: env !== 'local'
     loop: "{{ keyfiles }}"
 
   - name: "Deploy remote configs"
-    shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer $(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) --org mozillareality --ring mr {{ item }}.default $(date +%s)"
+    shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{target_ip}} --org mozillareality --ring mr {{ item }}.default $(date +%s)"
     when: env != 'local'
     loop: "{{ services }}"
 
@@ -66,12 +66,12 @@
     loop: "{{ services }}"
 
   - name: "Deploy remote file key"
-    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer $(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
+    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
     when: env != 'local'
     loop: "{{ keyfiles }}"
 
   - name: "Deploy remote file pem"
-    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer $(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
+    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
     when: env != 'local'
     loop: "{{ keyfiles }}"
 

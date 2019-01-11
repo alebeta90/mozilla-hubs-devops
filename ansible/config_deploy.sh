@@ -16,4 +16,4 @@ TARGET_IP=$3
 [[ -z "$ENVIRONMENT" ]] && ENVIRONMENT=dev
 
 
-ansible-playbook -i "${TARGET_IP}," -u ubuntu "${HOST_TYPE}-config.yml"
+ansible-playbook -v -i "${TARGET_IP}," --ssh-common-args="-o ProxyCommand=\"ssh -W %h:%p -o StrictHostKeyChecking=no ubuntu@${TARGET_IP}\"" --extra-vars "env=${ENVIRONMENT}  target_ip=${TARGET_IP} connection=ssh" -u ubuntu "${HOST_TYPE}-config.yml"

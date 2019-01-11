@@ -1,0 +1,76 @@
+[phx]
+port = 4000
+secret_key = "{{ phoenix_secret_key }}"
+url_host = "{{ phoenix_url_host }}"
+static_url_host = "{{ phoenix_static_url_host }}"
+admin_access_key = "{{ phoenix_admin_access_key }}"
+
+[guardian]
+secret_key = "{{ guardian_secret_key }}"
+
+[habitat]
+http_port = 9631
+
+[erlang]
+node_cookie = "{{ erlang_node_cookie }}"
+
+[basic_auth]
+username = "{{ basic_auth_username }}"
+password = "{{ basic_auth_password }}"
+
+[db]
+username = "postgres"
+password = "{{ ret_db_password }}"
+hostname = "{{ ret_db_hostname }}"
+database = "ret_production"
+pool_size = 16
+
+[farspark]
+signature_key = "{{ farspark_signature_key }}"
+signature_salt = "{{ farspark_signature_salt }}"
+host = "{{ farspark_host }}"
+
+[resolver]
+giphy_api_key = "{{ giphy_api_key }}"
+deviantart_client_id = "{{ deviantart_client_id }}"
+deviantart_client_secret = "{{ deviantart_client_secret }}"
+imgur_mashape_api_key = "{{ imgur_mashape_api_key }}"
+imgur_client_id = "{{ imgur_client_id }}"
+ytdl_host = "{{ ytdl_host }}"
+google_poly_api_key = "{{ google_poly_api_key }}"
+sketchfab_api_key = "{{ sketchfab_api_key }}"
+
+[uploads]
+storage_path = "{{ uploads_storage_path }}"
+ttl = {{ uploads_ttl }}
+host = "{{ uploads_host }}"
+
+[security]
+content_security_policy = "{{ content_security_policy }}"
+cors_origins = "{{ cors_origins }}"
+
+[email]
+server = "{{ mailer_server }}"
+port = {{ mailer_port }}
+username = "{{ mailer_username }}"
+password = "{{ mailer_password }}"
+from = "{{ mailer_from }}"
+
+[support]
+slack_webhook_url = "{{ support_slack_webhook_url }}"
+
+[web_push]
+subject = "{{ web_push_subject }}"
+public_key = "{{ web_push_public_key }}"
+private_key = "{{ web_push_private_key }}"
+
+[sentry]
+dsn = "{{ sentry_dsn }}"
+
+[discord]
+bot_token = "{{ discord_bot_token }}"
+
+[janus]
+service_name = "{{ janus_service_name }}"
+admin_secret = "{{ janus_admin_secret }}"
+admin_port = {{ janus_admin_port }}
