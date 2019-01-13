@@ -1,0 +1,10 @@
+[Unit]
+Description=The Habitat Supervisor
+
+[Service]
+User=hab
+Group=hab
+ExecStart=/bin/hab sup run --ring mr
+
+[Install]
+WantedBy=default.target

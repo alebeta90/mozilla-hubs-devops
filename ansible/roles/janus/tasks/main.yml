@@ -14,13 +14,26 @@
     shell: "hab pkg install mozillareality/hab-butterfly"
     when: env != 'local'
 
+  - name: change /hab folder permission
+    command: chown -R hab:hab /hab
+
+  - name: restart hab service
+    service:
+      name: hab.service
+      state: restarted
+      enabled: yes 
+
   - name: Create work directory
+    become: yes
+    become_user: hab
     tempfile:
       state: directory
       suffix: deploy
     register: work_dir
 
   - name: "Write config"
+    become: yes
+    become_user: hab
     template:
       src: "{{ item }}.toml.j2"
       dest: "{{ work_dir.path }}/{{ item }}.toml"
@@ -41,8 +54,10 @@
 #    loop: "{{ keyfiles }}"
 
   - name: "Generate local cert"
+    become: yes
+    become_user: hab
     shell: "openssl req -newkey rsa:2048 -nodes -keyout \"{{ work_dir.path }}/{{ item }}.key\" -x509 -days 365 -out \"{{ work_dir.path }}/{{ item }}.pem\" -subj '/C=US/ST=California/L=Mountain View/O=YourOrg/OU=YourDept/CN=yoursite.com'"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
 #  - name: "Deploy remote configs"
@@ -51,18 +66,24 @@
 #    loop: "{{ services }}"
 
   - name: "Make local target config dir"
+    become: yes
+    become_user: hab
     shell: "mkdir -p /hab/user/{{ item }}/config"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ services }}"
 
   - name: "Make local target files dir"
+    become: yes
+    become_user: hab
     shell: "mkdir -p /hab/svc/{{ item }}/files"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ services }}"
 
   - name: "Copy local config"
+    become: yes
+    become_user: hab
     shell: "cp {{ work_dir.path }}/{{ item }}.toml /hab/user/{{ item }}/config/user.toml"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ services }}"
 
 #  - name: "Deploy remote file key"
@@ -76,13 +97,17 @@
 #    loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile pem"
+    become: yes
+    become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.pem\" /hab/svc/janus-gateway/files"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile key"
+    become: yes
+    become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.key\" /hab/svc/janus-gateway/files"
-    when: env == 'local'
+    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
   always:
