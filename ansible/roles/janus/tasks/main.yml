@@ -4,7 +4,6 @@
   - name: Include remote specific vars
     include_vars:
       file: "roles/janus/vars/remote.yml"
-    when: env != 'local'
 
   - name: Include environment specific vars
     include_vars:
@@ -12,7 +11,6 @@
 
   - name: Install moz hab-butterfly (needed until https://github.com/habitat-sh/habitat/issues/4066 is closed)
     shell: "hab pkg install mozillareality/hab-butterfly"
-    when: env != 'local'
 
   - name: change /hab folder permission
     command: chown -R hab:hab /hab
@@ -39,75 +37,52 @@
       dest: "{{ work_dir.path }}/{{ item }}.toml"
     loop: "{{ services }}"
 
-#  - name: "Write local file key"
-#    copy:
-#      src: "{{ item }}.key"
-#      dest: "{{ work_dir.path }}/{{ item }}.key"
-#    when: env != 'local'
-#    loop: "{{ keyfiles }}"
-
-#  - name: "Write local file pem"
-#    copy:
-#      src: "{{ item }}.pem"
-#      dest: "{{ work_dir.path }}/{{ item }}.pem"
-#    when: env != 'local'
-#    loop: "{{ keyfiles }}"
-
   - name: "Generate local cert"
     become: yes
     become_user: hab
     shell: "openssl req -newkey rsa:2048 -nodes -keyout \"{{ work_dir.path }}/{{ item }}.key\" -x509 -days 365 -out \"{{ work_dir.path }}/{{ item }}.pem\" -subj '/C=US/ST=California/L=Mountain View/O=YourOrg/OU=YourDept/CN=yoursite.com'"
-    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
-#  - name: "Deploy remote configs"
-#    shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{target_ip}} --org mozillareality --ring mr {{ item }}.default $(date +%s)"
-#    when: env != 'local'
-#    loop: "{{ services }}"
+  - name: "Deploy remote configs"
+    shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{target_ip}} --org mozillareality --ring mr {{ item }}.default $(date +%s)"
+    loop: "{{ services }}"
 
   - name: "Make local target config dir"
     become: yes
     become_user: hab
     shell: "mkdir -p /hab/user/{{ item }}/config"
-    #when: env == 'local'
     loop: "{{ services }}"
 
   - name: "Make local target files dir"
     become: yes
     become_user: hab
     shell: "mkdir -p /hab/svc/{{ item }}/files"
-    #when: env == 'local'
     loop: "{{ services }}"
 
   - name: "Copy local config"
     become: yes
     become_user: hab
     shell: "cp {{ work_dir.path }}/{{ item }}.toml /hab/user/{{ item }}/config/user.toml"
-    #when: env == 'local'
     loop: "{{ services }}"
 
-#  - name: "Deploy remote file key"
-#    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
-#    when: env != 'local'
-#    loop: "{{ keyfiles }}"
+  - name: "Deploy remote file key"
+    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
+    loop: "{{ keyfiles }}"
 
-#  - name: "Deploy remote file pem"
-#    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
-#    when: env != 'local'
-#    loop: "{{ keyfiles }}"
+  - name: "Deploy remote file pem"
+    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
+    loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile pem"
     become: yes
     become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.pem\" /hab/svc/janus-gateway/files"
-    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile key"
     become: yes
     become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.key\" /hab/svc/janus-gateway/files"
-    #when: env == 'local'
     loop: "{{ keyfiles }}"
 
   always:
@@ -115,3 +90,8 @@
     file:
       path: "{{ work_dir.path }}"
       state: absent
+
+  - name: start janus service
+    become: yes
+    become_user: hab
+    command: hab svc load mozillareality/janus-gateway
