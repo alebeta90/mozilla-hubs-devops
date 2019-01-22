@@ -36,7 +36,7 @@ content_security_policy: "default-src 'none'; script-src 'self' https://assets-p
 mailer_server: "hermes.gonkar.com"
 mailer_port: "25"
 mailer_username: "info@uxr.zone"
-mailer_password: "Arremanga_Arrempuja4321"
+mailer_password: "Arremanga_Arrempuja"
 mailer_from: "info@uxr.zone"
 support_slack_webhook_url:
 guardian_secret_key: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
