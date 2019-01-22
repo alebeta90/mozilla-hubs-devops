@@ -1,13 +1,13 @@
 ---
 
 ret_db_password: secreto_secreto
-erlang_node_cookie:
-phoenix_secret_key: secreto_secreto
-phoenix_admin_access_key: secreto_secreto
+erlang_node_cookie: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
+phoenix_secret_key: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
+phoenix_admin_access_key: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
 oauth_google_client_id:
 oauth_google_client_secret:
 basic_auth_username: admin
-basic_auth_password: secreto_secreto
+basic_auth_password: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
 uploads_storage_path: "/uploads"
 uploads_ttl: 172800
 janus_admin_port: 7000
@@ -39,7 +39,7 @@ mailer_username:
 mailer_password:
 mailer_from: "info@hubs-mail.com"
 support_slack_webhook_url:
-guardian_secret_key:
+guardian_secret_key: txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5
 web_push_subject: "mailto:info@hubs-mail.com"
 web_push_public_key:
 web_push_private_key:

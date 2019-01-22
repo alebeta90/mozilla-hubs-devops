@@ -12,76 +12,60 @@
   - name: Install moz hab-butterfly (needed until https://github.com/habitat-sh/habitat/issues/4066 is closed)
     shell: "hab pkg install mozillareality/hab-butterfly"
 
-  - name: change /hab folder permission
-    command: chown -R hab:hab /hab
 
   - name: restart hab service
+    become: yes
+    become_user: root
     service:
       name: hab.service
       state: restarted
       enabled: yes 
 
   - name: Create work directory
-    become: yes
-    become_user: hab
     tempfile:
       state: directory
       suffix: deploy
     register: work_dir
 
   - name: "Write config"
-    become: yes
-    become_user: hab
     template:
       src: "{{ item }}.toml.j2"
       dest: "{{ work_dir.path }}/{{ item }}.toml"
     loop: "{{ services }}"
 
   - name: "Generate local cert"
-    become: yes
-    become_user: hab
     shell: "openssl req -newkey rsa:2048 -nodes -keyout \"{{ work_dir.path }}/{{ item }}.key\" -x509 -days 365 -out \"{{ work_dir.path }}/{{ item }}.pem\" -subj '/C=US/ST=California/L=Mountain View/O=YourOrg/OU=YourDept/CN=yoursite.com'"
     loop: "{{ keyfiles }}"
 
-  - name: "Deploy remote configs"
-    shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{target_ip}} --org mozillareality --ring mr {{ item }}.default $(date +%s)"
-    loop: "{{ services }}"
+ # - name: "Deploy remote configs"
+ #   shell: "cat {{ work_dir.path }}/{{ item }}.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{target_ip}} --org mozillareality --ring mr {{ item }}.default $(date +%s)"
+ #   loop: "{{ services }}"
 
   - name: "Make local target config dir"
-    become: yes
-    become_user: hab
     shell: "mkdir -p /hab/user/{{ item }}/config"
     loop: "{{ services }}"
 
   - name: "Make local target files dir"
-    become: yes
-    become_user: hab
     shell: "mkdir -p /hab/svc/{{ item }}/files"
     loop: "{{ services }}"
 
   - name: "Copy local config"
-    become: yes
-    become_user: hab
     shell: "cp {{ work_dir.path }}/{{ item }}.toml /hab/user/{{ item }}/config/user.toml"
     loop: "{{ services }}"
 
-  - name: "Deploy remote file key"
-    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
-    loop: "{{ keyfiles }}"
+#  - name: "Deploy remote file key"
+#    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.key"
+#    loop: "{{ keyfiles }}"
 
-  - name: "Deploy remote file pem"
-    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
-    loop: "{{ keyfiles }}"
+#  - name: "Deploy remote file pem"
+#    shell: "/hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly file upload --peer {{target_ip}} --org mozillareality --ring mr janus-gateway.default $(date +%s) {{ work_dir.path }}/{{ item }}.pem"
+#    loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile pem"
-    become: yes
-    become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.pem\" /hab/svc/janus-gateway/files"
     loop: "{{ keyfiles }}"
 
   - name: "Copy local keyfile key"
-    become: yes
-    become_user: hab
     shell: "cp \"{{ work_dir.path }}/{{ item }}.key\" /hab/svc/janus-gateway/files"
     loop: "{{ keyfiles }}"
 

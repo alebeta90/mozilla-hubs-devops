@@ -1,4 +1,5 @@
 [phx]
+ip = "127.0.0.1"
 port = 4000
 secret_key = "{{ phoenix_secret_key }}"
 url_host = "{{ phoenix_url_host }}"
@@ -9,7 +10,11 @@ admin_access_key = "{{ phoenix_admin_access_key }}"
 secret_key = "{{ guardian_secret_key }}"
 
 [habitat]
+ip = "127.0.0.1"
 http_port = 9631
+
+[pages]
+page_origin = "https://client.hubs.uxr.zone/pages"
 
 [erlang]
 node_cookie = "{{ erlang_node_cookie }}"
@@ -82,3 +87,4 @@ bot_token = "{{ discord_bot_token }}"
 service_name = "{{ janus_service_name }}"
 admin_secret = "{{ janus_admin_secret }}"
 admin_port = {{ janus_admin_port }}
+default_host = "janus.hubs.uxr.zone"

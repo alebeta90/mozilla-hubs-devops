@@ -1,4 +1,4 @@
-farspark_server_url: "https://farspark.hubs.gonkar.com/"
+farspark_server_url: "https://farspark.hubs.uxr.zone/"
 farspark_signature_key: df65b46rt5j45s6d4v6SD5B4AE6TH
 farspark_signature_salt: asdgetasdASDWasd567
 farspark_allow_origins: "https://hubs.mozilla.com,https://smoke-hubs.mozilla.com,http://hubs.local:9090,http://localhost:9090,https://hubs.local:9090,https://localhost:9090,https://hubs.uxr.zone,https://hubs.uxr.zone:8080"

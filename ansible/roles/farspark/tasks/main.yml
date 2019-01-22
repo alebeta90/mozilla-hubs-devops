@@ -14,6 +14,9 @@
       suffix: deploy
     register: work_dir
 
+  - name: "Make local target config dir"
+    shell: "mkdir -p /hab/user/farspark/config"
+
   - name: Write Farspark config file
     template:
       src: farspark.toml.j2
@@ -24,11 +27,14 @@
       src: dd-agent.toml.j2
       dest: "{{ work_dir.path }}/dd-agent.toml"
 
-  - name: Deploy Farspark configs
-    shell: "cat {{ work_dir.path }}/farspark.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr farspark.default $(date +%s)"
+#  - name: Deploy Farspark configs
+#    shell: "cat {{ work_dir.path }}/farspark.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr farspark.default $(date +%s)"
 
-  - name: Deploy Datadog Agent configs
-    shell: "cat {{ work_dir.path }}/dd-agent.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr dd-agent.default $(date +%s)"
+#  - name: Deploy Datadog Agent configs
+#    shell: "cat {{ work_dir.path }}/dd-agent.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr dd-agent.default $(date +%s)"
+
+  - name: "Copy local config"
+    shell: "cp {{ work_dir.path }}/farspark.toml /hab/user/farspark/config/user.toml"
 
   always:
   - name: Remove work directory

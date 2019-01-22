@@ -14,6 +14,9 @@
       suffix: deploy
     register: work_dir
 
+  - name: "Make local target config dir"
+    shell: "mkdir -p /hab/user/reticulum/config"
+
   - name: Write Reticulum config file
     template:
       src: reticulum.toml.j2
@@ -24,11 +27,14 @@
       src: dd-agent.toml.j2
       dest: "{{ work_dir.path }}/dd-agent.toml"
 
-  - name: Deploy Reticulum configs
-    shell: "cat {{ work_dir.path }}/reticulum.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr reticulum.default $(date +%s)"
+#  - name: Deploy Reticulum configs
+#    shell: "cat {{ work_dir.path }}/reticulum.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr reticulum.default $(date +%s)"
 
-  - name: Deploy Datadog Agent configs
-    shell: "cat {{ work_dir.path }}/dd-agent.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr dd-agent.default $(date +%s)"
+#  - name: Deploy Datadog Agent configs
+#    shell: "cat {{ work_dir.path }}/dd-agent.toml | /hab/pkgs/mozillareality/hab-butterfly/0.39.1/20171118004554/bin/hab-butterfly config apply --peer {{ target_ip }} --org mozillareality --ring mr dd-agent.default $(date +%s)"
+
+  - name: "Copy local config"
+    shell: "cp {{ work_dir.path }}/reticulum.toml /hab/user/reticulum/config/user.toml"
 
   always:
   - name: Remove work directory

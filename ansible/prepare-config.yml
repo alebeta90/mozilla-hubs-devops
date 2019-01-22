@@ -41,6 +41,7 @@
     become_user: hab
     loop:
       - "hab ring key generate mr"
+      - "hab svc key generate janus.default mozillareality"
       - "hab svc key generate farspark.default mozillareality"
       - "hab svc key generate reticulum.default mozillareality"
       - "hab svc key generate dd-agent.default mozillareality"
